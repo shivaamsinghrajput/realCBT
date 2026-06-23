@@ -1,0 +1,227 @@
+/* --- Modern Variables & Reset --- */
+:root {
+    --primary-color: #2563eb; /* Modern vibrant blue */
+    --bg-color: #f3f4f6;      /* Soft page background */
+    --panel-bg: #ffffff;
+    --border-color: #e5e7eb;  /* Very subtle borders */
+    
+    /* Modern Palette Colors */
+    --color-unvisited: #f3f4f6;
+    --color-unanswered: #ef4444; /* Clean Red */
+    --color-answered: #10b981;   /* Emerald Green */
+    --color-review: #8b5cf6;     /* Vibrant Purple */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- Header --- */
+.cbt-header {
+    background-color: var(--primary-color);
+    color: white;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* Keeps shadow above content */
+}
+
+/* --- Layout Grid --- */
+.cbt-layout {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 120px);
+}
+
+/* --- Left Panel (Split Screen) --- */
+.left-panel {
+    flex: 7;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* THE FIX: Clean white background, top-left aligned content */
+/* THE FIX: Reduced padding from 40px to 20px to make the image appear larger */
+.pdf-viewer-container {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #ffffff; 
+    padding: 20px 40px; /* 20px top/bottom, 40px left/right */
+    display: block; 
+}
+
+/* --- Universal Answer Pad --- */
+/* THE FIX: Reduced padding to pull the options up slightly */
+.universal-answer-pad {
+    background-color: #f8fafc; 
+    border-top: 1px solid var(--border-color);
+    padding: 15px 40px; /* Reduced top/bottom padding from 20px to 15px */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap between header and buttons */
+    box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.pad-header {
+    display: flex;
+    justify-content: flex-start; /* Aligns text to the left since controls are gone */
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px; /* Tighter padding below the text */
+}
+
+.pdf-controls { display: flex; gap: 15px; align-items: center; }
+
+.horizontal-options {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.option-row {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 600;
+}
+
+.option-row:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+}
+
+.option-row input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.3);
+    accent-color: var(--primary-color);
+}
+
+.modern-input {
+    padding: 12px;
+    width: 300px;
+    font-size: 1.1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.modern-input:focus { border-color: var(--primary-color); }
+
+/* --- Right Panel (Palette) --- */
+.right-panel {
+    flex: 3;
+    background-color: var(--panel-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate-profile {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.palette-legend {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #f8fafc;
+}
+
+.legend-item { display: flex; align-items: center; gap: 8px; font-weight: 500;}
+
+.badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+}
+
+.palette-header {
+    padding: 15px 20px;
+    font-weight: bold;
+    color: #374151;
+    background-color: white;
+}
+
+.question-grid {
+    padding: 0 20px 20px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.grid-btn {
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s;
+    font-size: 1rem;
+}
+
+.grid-btn:hover { transform: translateY(-2px); }
+
+/* Status Classes */
+.unvisited { background-color: var(--color-unvisited); color: #4b5563; border: 1px solid var(--border-color); }
+.unanswered { background-color: var(--color-unanswered); color: white; }
+.answered { background-color: var(--color-answered); color: white; }
+.review { background-color: var(--color-review); color: white; }
+
+/* --- Footer Actions --- */
+.cbt-footer {
+    height: 60px;
+    background-color: var(--panel-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+}
+
+.left-actions, .right-actions { display: flex; gap: 15px; }
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary { background-color: #f3f4f6; color: #374151; border: 1px solid var(--border-color); }
+.btn-secondary:hover { background-color: #e5e7eb; }
+.btn-primary { background-color: var(--color-answered); color: white; }
+.btn-primary:hover { background-color: #059669; }
+.btn-danger { background-color: var(--primary-color); color: white; } /* Made submit button blue instead of red for a cleaner look */
+.btn-danger:hover { background-color: #1d4ed8; }
+.btn-small { padding: 6px 12px; font-size: 0.85rem; }
