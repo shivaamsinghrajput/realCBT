@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MockOS - CBT Environment</title>
+    <link rel="stylesheet" href="css/cbt.css" />
+  </head>
+  <body>
+    <header class="cbt-header">
+      <div class="logo">MockOS Test Player</div>
+
+      <div class="exam-title">JEE Main 2026 - Practice Mock</div>
+
+      <div class="upload-section">
+        <input
+          type="file"
+          id="pdf-upload"
+          accept=".pdf"
+          style="
+            color: black;
+            background: white;
+            padding: 5px;
+            border-radius: 4px;
+          "
+        />
+      </div>
+
+      <div class="timer-container">
+        Time Left: <span id="time-left">03:00:00</span>
+      </div>
+    </header>
+
+    <main class="cbt-layout">
+        
+        <section class="left-panel split-screen">
+            
+            <div class="pdf-viewer-container" id="pdf-container">
+                <canvas id="hidden-pdf-canvas" style="display: none;"></canvas>
+                </div>
+
+            <div class="universal-answer-pad">
+                <div class="pad-header">
+                    <span class="q-type" id="current-q-type" style="font-weight: 600; color: #374151;">Select your answer:</span>
+                </div>
+                
+                <div class="options-container horizontal-options" id="universal-options">
+                    <label class="option-row">
+                        <input type="radio" name="answer" value="1">
+                        <span class="option-text">(1)</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="radio" name="answer" value="2">
+                        <span class="option-text">(2)</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="radio" name="answer" value="3">
+                        <span class="option-text">(3)</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="radio" name="answer" value="4">
+                        <span class="option-text">(4)</span>
+                    </label>
+                </div>
+
+                <div class="numerical-container" id="universal-numerical" style="display: none;">
+                    <input type="number" id="numerical-input" placeholder="Enter numerical value..." class="modern-input">
+                </div>
+            </div>
+        </section>
+
+        <aside class="right-panel">
+            <div class="candidate-profile">
+                <div class="profile-info">
+                    <p id="student-name" style="font-weight: bold; font-size: 1.1rem;">JEE Aspirant</p>
+                    <p id="subject-name" style="color: #6b7280; font-size: 0.9rem;">Subject: Pending</p>
+                </div>
+            </div>
+
+            <div class="palette-legend">
+                <div class="legend-item"><div class="badge unvisited"></div> Not Visited</div>
+                <div class="legend-item"><div class="badge unanswered"></div> Not Answered</div>
+                <div class="legend-item"><div class="badge answered"></div> Answered</div>
+                <div class="legend-item"><div class="badge review"></div> Review</div>
+            </div>
+
+            <div class="palette-header">Question Palette</div>
+            <div class="question-grid" id="question-palette">
+                </div>
+        </aside>
+    </main>
+
+    <footer class="cbt-footer">
+      <div class="left-actions">
+        <button class="btn btn-secondary" id="btn-review">
+          Mark for Review & Next
+        </button>
+        <button class="btn btn-secondary" id="btn-clear">Clear Response</button>
+      </div>
+      <div class="right-actions">
+        <button class="btn btn-primary" id="btn-save-next">Save & Next</button>
+        <button class="btn btn-danger" id="btn-submit">Submit Test</button>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="js/exam.js"></script>
+    <script src="js/parser.js"></script>
+  </body>
+</html>
