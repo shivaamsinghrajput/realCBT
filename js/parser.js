@@ -193,34 +193,70 @@ function trimCanvasBottom(canvas) {
     }
 }
 // --- 4. The Upload Listener ---
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('pdf-upload').addEventListener('change', async (event) => {
-        const file = event.target.files[0];
-        
-        if (file && file.type === "application/pdf") {
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                currentPDF = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                
-                // --- THE MAGIC HAPPENS HERE ---
-                // Automatically scan the PDF and build the coordinate map!
-                const autoMap = await autoGenerateExamMap(currentPDF);
-                
-                document.querySelector('.upload-section').style.display = 'none';
-                document.querySelector('.exam-title').innerText = "JEE Main 2026 - Practice Mock";
+// --- 4. The Upload Listener ---
+// --- 4. The Auto-Loader & Timer Initialization ---
+// let examTimerInterval;
 
-                // Pass the auto-generated map directly into your Exam Engine
-                if (typeof startExam === "function") {
-                    startExam(autoMap); 
-                }
-                
-            } catch (error) {
-                console.error(error);
-                alert("Error analyzing PDF structure.");
-            }
+// --- 4. The Auto-Loader (Timer Removed & Shifted to exam.js) ---
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    const configData = localStorage.getItem('mockos_current_exam');
+    if (!configData) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    const config = JSON.parse(configData);
+    
+    if (config.url.startsWith('http')) {
+        alert("This paper is not downloaded yet! \n\n1. Run the Python downloader script.\n2. Ensure data.json points to 'papers/pdfs/your_file.pdf'.");
+        window.location.href = "index.html";
+        return;
+    } 
+
+    try {
+        document.querySelector('.exam-title').innerText = "Scanning Local Paper & Extracting Keys...";
+        
+        const loadingTask = pdfjsLib.getDocument(config.url);
+        currentPDF = await loadingTask.promise;
+        
+        // 1. Generate the Visual Map
+        const autoMap = await autoGenerateExamMap(currentPDF);
+        
+        // 2. Extract the Official Answer Key from the last page
+        const answerKey = await extractAnswerKey(currentPDF);
+        
+        document.querySelector('.exam-title').innerText = config.name;
+
+        // 3. Pass EVERYTHING to the Exam Engine
+        if (typeof startExam === "function") {
+            startExam(autoMap, answerKey, config); 
         }
-    });
+    } catch (error) {
+        console.error(error);
+        alert(`Error loading PDF from path: ${config.url}. Make sure the file exists!`);
+        window.location.href = "index.html";
+    }
 });
+
+// --- 5. MathonGo Answer Key Extractor ---
+async function extractAnswerKey(pdf) {
+    const lastPage = await pdf.getPage(pdf.numPages);
+    const textContent = await lastPage.getTextContent();
+    const fullText = textContent.items.map(item => item.str).join(" ");
+    
+    const keyMap = {};
+    // Regex safely captures both MCQs "1. (4)" and Numericals "21. (34)" or "22. (-5)"
+    const regex = /(\d+)\.\s*\(([-.\d]+|Bonus)\)/g; 
+    let match;
+    
+    while ((match = regex.exec(fullText)) !== null) {
+        keyMap[parseInt(match[1])] = match[2].trim();
+    }
+    
+    console.log("Successfully Extracted Answer Key:", keyMap);
+    return keyMap;
+}
 
 function determineSubject(qNumber) {
     if (qNumber <= 25) return "Physics";
