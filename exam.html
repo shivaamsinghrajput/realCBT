@@ -1,34 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MockOS - CBT Environment</title>
-    <link rel="stylesheet" href="css/cbt.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MockOS - JEE Main Simulator</title>
+    <link rel="stylesheet" href="css/cbt.css">
+</head>
+<body>
+
     <header class="cbt-header">
-      <div class="logo">MockOS Test Player</div>
-
-      <div class="exam-title">JEE Main 2026 - Practice Mock</div>
-
-      <div class="upload-section">
-        <input
-          type="file"
-          id="pdf-upload"
-          accept=".pdf"
-          style="
-            color: black;
-            background: white;
-            padding: 5px;
-            border-radius: 4px;
-          "
-        />
-      </div>
-
-      <div class="timer-container">
-        Time Left: <span id="time-left">03:00:00</span>
-      </div>
+        <div class="header-top">
+            <div class="logo">MockOS Test Player</div>
+            <div class="exam-title">JEE Main 2026 - Practice Mock</div>
+        </div>
+        
+        <div class="header-controls">
+            
+            <button id="theme-toggle" class="btn theme-btn">🌙 Dark Mode</button>
+            
+            <div class="timer-container">
+                Time Left: <span id="time-left" style="font-weight: bold; font-size: 1.1rem;">03:00:00</span>
+            </div>
+        </div>
     </header>
 
     <main class="cbt-layout">
@@ -41,7 +34,7 @@
 
             <div class="universal-answer-pad">
                 <div class="pad-header">
-                    <span class="q-type" id="current-q-type" style="font-weight: 600; color: #374151;">Select your answer:</span>
+                    <span class="q-type" id="current-q-type" style="font-weight: 600; color: var(--text-main);">Select your answer:</span>
                 </div>
                 
                 <div class="options-container horizontal-options" id="universal-options">
@@ -73,7 +66,7 @@
             <div class="candidate-profile">
                 <div class="profile-info">
                     <p id="student-name" style="font-weight: bold; font-size: 1.1rem;">JEE Aspirant</p>
-                    <p id="subject-name" style="color: #6b7280; font-size: 0.9rem;">Subject: Pending</p>
+                    <p id="subject-name" style="color: var(--text-muted); font-size: 0.9rem;">Subject: Pending</p>
                 </div>
             </div>
 
@@ -81,30 +74,63 @@
                 <div class="legend-item"><div class="badge unvisited"></div> Not Visited</div>
                 <div class="legend-item"><div class="badge unanswered"></div> Not Answered</div>
                 <div class="legend-item"><div class="badge answered"></div> Answered</div>
-                <div class="legend-item"><div class="badge review"></div> Review</div>
+                <div class="legend-item"><div class="badge review"></div> Marked for Review</div>
+                <div class="legend-item" style="width: 100%;"><div class="badge review-answered"></div> Answered & Marked</div>
             </div>
 
-            <div class="palette-header">Question Palette</div>
+            <div class="subject-tabs-container">
+                <button class="sub-tab active" id="tab-Physics">Physics</button>
+                <button class="sub-tab" id="tab-Chemistry">Chemistry</button>
+                <button class="sub-tab" id="tab-Mathematics">Maths</button>
+            </div>
+            
+            <div class="palette-header" id="palette-title">Physics Section</div>
             <div class="question-grid" id="question-palette">
                 </div>
         </aside>
     </main>
 
     <footer class="cbt-footer">
-      <div class="left-actions">
-        <button class="btn btn-secondary" id="btn-review">
-          Mark for Review & Next
-        </button>
-        <button class="btn btn-secondary" id="btn-clear">Clear Response</button>
-      </div>
-      <div class="right-actions">
-        <button class="btn btn-primary" id="btn-save-next">Save & Next</button>
-        <button class="btn btn-danger" id="btn-submit">Submit Test</button>
-      </div>
+        <div class="left-actions">
+            <button class="btn btn-secondary" id="btn-clear">Clear Response</button>
+            <button class="btn btn-secondary" id="btn-review">Mark for Review & Next</button>
+        </div>
+        <div class="right-actions">
+            <button class="btn btn-primary" id="btn-save-next">Save & Next</button>
+            <button class="btn btn-danger" id="btn-submit-exam" style="background-color: var(--nta-unanswered); margin-left: 15px;">Submit Exam</button>
+        </div>
     </footer>
+    <div class="modal-overlay" id="result-modal" style="z-index: 1000;">
+        <div class="modal-content" style="max-width: 600px; text-align: center; padding: 40px;">
+            <h2 style="margin-bottom: 30px; font-size: 2rem;">Test Submitted Successfully</h2>
+            
+            <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                <div class="stat-card" style="background-color: var(--pad-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Total Score</p>
+                    <p style="font-size: 2rem; font-weight: bold;" id="res-score">0<small style="font-size: 1rem; color: var(--text-muted);">/300</small></p>
+                </div>
+                <div class="stat-card" style="background-color: var(--pad-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Accuracy</p>
+                    <p style="font-size: 2rem; font-weight: bold;" id="res-acc">0%</p>
+                </div>
+                <div class="stat-card" style="background-color: var(--pad-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Attempted</p>
+                    <p style="font-size: 2rem; font-weight: bold;" id="res-att">0<small style="font-size: 1rem; color: var(--text-muted);">/75</small></p>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-around; margin-bottom: 30px; color: var(--text-muted); font-size: 0.95rem;">
+                <span id="res-phy">Physics: 0</span>
+                <span id="res-chem">Chemistry: 0</span>
+                <span id="res-math">Maths: 0</span>
+            </div>
+
+            <button class="btn btn-primary" onclick="window.location.href='index.html'" style="width: 100%; padding: 15px; font-size: 1.1rem;">Return to Dashboard</button>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="js/exam.js"></script>
     <script src="js/parser.js"></script>
-  </body>
+    <script src="js/exam.js"></script>
+</body>
 </html>
