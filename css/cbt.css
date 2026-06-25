@@ -1,22 +1,51 @@
-/* --- Modern Variables & Reset --- */
+/* =========================================
+   1. VARIABLES & THEMES
+========================================= */
+
+/* --- Light Mode Variables (Default) --- */
 :root {
-    --primary-color: #2563eb; /* Modern vibrant blue */
-    --bg-color: #f3f4f6;      /* Soft page background */
+    --primary-color: #2563eb; 
+    --bg-color: #f3f4f6;      
     --panel-bg: #ffffff;
-    --border-color: #e5e7eb;  /* Very subtle borders */
-    
-    /* Modern Palette Colors */
-    --color-unvisited: #f3f4f6;
-    --color-unanswered: #ef4444; /* Clean Red */
-    --color-answered: #10b981;   /* Emerald Green */
-    --color-review: #8b5cf6;     /* Vibrant Purple */
+    --text-main: #374151;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;  
+    --pad-bg: #f8fafc;
+    --canvas-bg: #ffffff;
+
+    /* Exact NTA CBT Colors */
+    --nta-unvisited: #e2e8f0;
+    --nta-unanswered: #e1523d; 
+    --nta-answered: #34a853;   
+    --nta-review: #613dba;     
 }
 
+/* --- Dark Mode Variables (Modern OLED Style) --- */
+[data-theme="dark"] {
+    --primary-color: #2563eb; 
+    --bg-color: #121212;      
+    --panel-bg: #1e1e1e;      
+    --text-main: #e4e4e7;     
+    --text-muted: #a1a1aa;    
+    --border-color: #27272a;  
+    --pad-bg: #18181b;        
+    --canvas-bg: #cbd5e1; 
+}
+
+/* Dim the glaring white PDF images in dark mode to protect eyes */
+[data-theme="dark"] .visible-slice {
+    filter: brightness(0.85) contrast(1.05);
+}
+
+/* =========================================
+   2. GLOBAL RESET
+========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
 }
 
 body {
@@ -25,98 +54,136 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: background-color 0.3s;
 }
 
-/* --- Header --- */
+/* =========================================
+   3. HEADER
+========================================= */
 .cbt-header {
     background-color: var(--primary-color);
-    color: white;
-    height: 60px;
+    padding: 15px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    flex-shrink: 0; /* Prevents header from being squished */
+}
+
+.cbt-header * { 
+    color: white; 
+}
+
+.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Keeps shadow above content */
+    width: 100%;
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
-/* --- Layout Grid --- */
-.cbt-layout {
+.header-controls {
     display: flex;
-    flex: 1;
-    height: calc(100vh - 120px);
+    gap: 15px;
+    align-items: center;
+    width: 100%;
 }
 
-/* --- Left Panel (Split Screen) --- */
+.timer-container {
+    margin-left: auto; /* Pushes the timer to the far right */
+}
+
+.theme-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.theme-btn:hover { 
+    background: rgba(255, 255, 255, 0.2); 
+    border-color: white;
+}
+
+/* =========================================
+   4. MAIN LAYOUT & LEFT PANEL
+========================================= */
+.cbt-layout { 
+    display: flex; 
+    flex: 1; 
+    overflow: hidden; 
+}
+
 .left-panel {
     flex: 7;
     background-color: var(--panel-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    overflow-y: auto; /* Scrollbar for the whole left side */
 }
 
-/* THE FIX: Clean white background, top-left aligned content */
-/* THE FIX: Reduced padding from 40px to 20px to make the image appear larger */
 .pdf-viewer-container {
-    flex: 1;
-    overflow-y: auto;
-    background-color: #ffffff; 
-    padding: 20px 40px; /* 20px top/bottom, 40px left/right */
-    display: block; 
-}
-
-/* --- Universal Answer Pad --- */
-/* THE FIX: Reduced padding to pull the options up slightly */
-.universal-answer-pad {
-    background-color: #f8fafc; 
-    border-top: 1px solid var(--border-color);
-    padding: 15px 40px; /* Reduced top/bottom padding from 20px to 15px */
+    padding: 30px 40px 10px 40px;
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Reduced gap between header and buttons */
-    box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
-}
-
-.pad-header {
-    display: flex;
-    justify-content: flex-start; /* Aligns text to the left since controls are gone */
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 8px; /* Tighter padding below the text */
 }
 
-.pdf-controls { display: flex; gap: 15px; align-items: center; }
+/* =========================================
+   5. UNIVERSAL ANSWER PAD
+========================================= */
+.universal-answer-pad {
+    background-color: transparent; 
+    padding: 5px 40px 40px 40px; /* Tight top padding hugs the image */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 12px;
+}
+
+.pad-header { 
+    width: 100%;
+    max-width: 700px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px; 
+}
 
 .horizontal-options {
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 700px;
     gap: 20px;
+    padding-bottom: 5px;
 }
 
 .option-row {
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 10px 20px;
-    background-color: white;
+    padding: 8px 16px;
+    background-color: var(--panel-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    transition: all 0.2s ease;
     font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .option-row:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
 }
 
-.option-row input[type="radio"] {
-    margin-right: 10px;
-    transform: scale(1.3);
+.option-row input[type="radio"] { 
+    margin-right: 10px; 
+    transform: scale(1.3); 
     accent-color: var(--primary-color);
 }
 
@@ -127,11 +194,16 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     outline: none;
-    transition: border-color 0.2s;
+    background-color: var(--panel-bg);
 }
-.modern-input:focus { border-color: var(--primary-color); }
 
-/* --- Right Panel (Palette) --- */
+.modern-input:focus { 
+    border-color: var(--primary-color); 
+}
+
+/* =========================================
+   6. RIGHT PANEL & PALETTE
+========================================= */
 .right-panel {
     flex: 3;
     background-color: var(--panel-bg);
@@ -140,33 +212,33 @@ body {
 }
 
 .candidate-profile {
-    padding: 20px;
+    padding: 15px 20px;
     border-bottom: 1px solid var(--border-color);
 }
+.candidate-profile p { margin-bottom: 2px; }
 
 .palette-legend {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: #f8fafc;
-}
-
-.legend-item { display: flex; align-items: center; gap: 8px; font-weight: 500;}
-
-.badge {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-}
-
-.palette-header {
     padding: 15px 20px;
-    font-weight: bold;
-    color: #374151;
-    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--pad-bg);
+}
+
+.legend-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-weight: 500; 
+    width: 45%; 
+}
+
+.palette-header { 
+    padding: 15px 20px; 
+    font-weight: bold; 
+    background-color: var(--panel-bg); 
 }
 
 .question-grid {
@@ -177,51 +249,187 @@ body {
     overflow-y: auto;
 }
 
-.grid-btn {
-    padding: 12px 0;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.1s;
+/* =========================================
+   7. EXACT NTA SHAPES & BADGES
+========================================= */
+.grid-btn, .badge {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    width: 45px; 
+    height: 40px; 
+    color: white !important; 
+    font-weight: bold; 
     font-size: 1rem;
+    border: none; 
+    cursor: pointer; 
+    position: relative;
 }
 
-.grid-btn:hover { transform: translateY(-2px); }
+/* Smaller badges for the legend */
+.badge { 
+    width: 30px; 
+    height: 26px; 
+    font-size: 0; 
+    cursor: default; 
+} 
 
-/* Status Classes */
-.unvisited { background-color: var(--color-unvisited); color: #4b5563; border: 1px solid var(--border-color); }
-.unanswered { background-color: var(--color-unanswered); color: white; }
-.answered { background-color: var(--color-answered); color: white; }
-.review { background-color: var(--color-review); color: white; }
+/* 1. Unvisited: Standard Square with rounding */
+.unvisited { 
+    background-color: var(--nta-unvisited); 
+    color: #333 !important; 
+    border-radius: 4px; 
+}
 
-/* --- Footer Actions --- */
+/* 2. Unanswered: Red Polygon (top edge slopes down) */
+.unanswered { 
+    background-color: var(--nta-unanswered); 
+    clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 100%); 
+    border-radius: 4px; 
+}
+
+/* 3. Answered: Green Polygon (top edge slopes up) */
+.answered { 
+    background-color: var(--nta-answered); 
+    clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%); 
+    border-radius: 4px; 
+}
+
+/* 4. Marked for Review: Purple Circle */
+.review { 
+    background-color: var(--nta-review); 
+    border-radius: 50%; 
+}
+
+/* 5. Answered & Marked: Purple Circle with green checkmark */
+.review-answered { 
+    background-color: var(--nta-review); 
+    border-radius: 50%; 
+}
+.review-answered::after {
+    content: "✔";
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+    background-color: var(--nta-answered);
+    width: 14px; 
+    height: 14px;
+    border-radius: 50%;
+    font-size: 9px; 
+    line-height: 14px; 
+    text-align: center; 
+    color: white;
+    border: 1px solid white;
+}
+
+/* =========================================
+   8. FOOTER
+========================================= */
 .cbt-footer {
     height: 60px;
     background-color: var(--panel-bg);
     border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
+    display: flex; 
+    justify-content: space-between; 
     align-items: center;
     padding: 0 24px;
+    flex-shrink: 0; /* Locks the footer firmly to the bottom */
 }
 
-.left-actions, .right-actions { display: flex; gap: 15px; }
+.left-actions, .right-actions { 
+    display: flex; 
+    gap: 15px; 
+}
 
-.btn {
-    padding: 10px 20px;
+.btn { 
+    padding: 10px 20px; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    border: none; 
+}
+
+.btn-secondary { 
+    background-color: var(--pad-bg); 
+    border: 1px solid var(--border-color); 
+}
+.btn-secondary:hover { background-color: var(--border-color); }
+
+.btn-primary { 
+    background-color: var(--nta-answered); 
+    color: white; 
+}
+.btn-primary:hover { filter: brightness(0.9); }
+
+.btn-danger { 
+    background-color: var(--primary-color); 
+    color: white; 
+}
+.btn-danger:hover { filter: brightness(0.9); }
+
+/* --- Subject Tabs --- */
+.subject-tabs-container {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--panel-bg);
+}
+
+.sub-tab {
+    flex: 1;
+    padding: 12px 0;
     border: none;
-    border-radius: 6px;
+    background: transparent;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.95rem;
-    transition: background-color 0.2s;
+    color: var(--text-muted);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
 }
 
-.btn-secondary { background-color: #f3f4f6; color: #374151; border: 1px solid var(--border-color); }
-.btn-secondary:hover { background-color: #e5e7eb; }
-.btn-primary { background-color: var(--color-answered); color: white; }
-.btn-primary:hover { background-color: #059669; }
-.btn-danger { background-color: var(--primary-color); color: white; } /* Made submit button blue instead of red for a cleaner look */
-.btn-danger:hover { background-color: #1d4ed8; }
-.btn-small { padding: 6px 12px; font-size: 0.85rem; }
+.sub-tab:hover { color: var(--text-main); }
+.sub-tab.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.05);
+}
+
+/* =========================================
+   9. RESULT MODAL OVERLAY
+========================================= */
+.modal-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 1000;
+    
+    /* These two lines keep it hidden by default */
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.3s ease;
+}
+
+/* When JavaScript adds the "active" class, it fades in */
+.modal-overlay.active { 
+    opacity: 1; 
+    pointer-events: all; 
+}
+
+.modal-content {
+    background-color: var(--panel-bg);
+    border-radius: 16px; 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+    transform: translateY(20px); 
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content { 
+    transform: translateY(0); 
+}
