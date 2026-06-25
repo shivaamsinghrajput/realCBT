@@ -1,0 +1,136 @@
+/* --- Minimalist Dashboard Core (Locked to 100vh) --- */
+.dashboard-body { 
+    background-color: var(--bg-color); 
+    color: var(--text-main); 
+    height: 100vh;           /* Locks to window height */
+    overflow: hidden;        /* Kills the main page scrollbar */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+/* Header */
+.dash-header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 8px 30px; /* Reduced from 15px 40px */
+    border-bottom: 1px solid var(--border-color); 
+    background-color: var(--bg-color); flex-shrink: 0;
+}
+.dash-logo { 
+    font-size: 1.3rem; /* Reduced from 1.5rem */ 
+    font-weight: 800; letter-spacing: -0.5px; 
+}
+.dash-controls { display: flex; gap: 20px; align-items: center; }
+.target-badge { border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+
+/* Layout Hierarchy */
+.dash-layout { 
+    max-width: 1400px; width: 100%; margin: 0 auto; 
+    padding: 12px 20px; /* Reduced top/bottom padding from 20px */
+    display: flex; flex-direction: column; 
+    gap: 15px;            /* Reduced gap from 20px */
+    flex: 1;              
+    min-height: 0;        
+}
+.dash-title { 
+    font-size: 0.8rem; font-weight: 700; color: var(--text-muted); 
+    margin-bottom: 8px; /* Reduced from 10px */
+    text-transform: uppercase; letter-spacing: 1.5px; 
+}
+/* Section 1: 5 Horizontal Action Cards */
+.launchpad-section { flex-shrink: 0; position: relative; } /* position: relative anchors the floating archive */
+.launchpad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+.action-card {
+    padding: 15px; border-radius: 12px; background-color: var(--panel-bg);
+    border: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+}
+.action-card:hover:not(.disabled) { border-color: var(--primary-color); background-color: rgba(37, 99, 235, 0.05); transform: translateY(-2px); }
+.action-card.active { border-color: var(--primary-color); background-color: rgba(37, 99, 235, 0.05); }
+.action-card.disabled { opacity: 0.5; cursor: not-allowed; }
+.ac-icon { font-size: 1.5rem; }
+.ac-text { font-size: 0.9rem; font-weight: 600; position: relative; }
+.action-badge { background-color: var(--nta-review); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 8px; position: absolute; top: -15px; right: -25px; }
+
+/* Floating Mains Dropdown Archive */
+.hidden-archive { 
+    display: none; 
+    position: absolute; top: calc(100% + 10px); left: 0; width: 100%; z-index: 50; 
+    border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; 
+    background-color: var(--bg-color); box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    max-height: 50vh; overflow-y: auto; /* Internal scrolling if archive gets huge */
+}
+.hidden-archive.open { display: block; animation: slideDown 0.2s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+.sub-category { margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+.sub-header { padding: 12px 15px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background-color: var(--panel-bg); display: flex; justify-content: space-between; }
+.sub-body { display: none; padding: 15px; background-color: var(--pad-bg); }
+.sub-category.active .sub-body { display: block; }
+.shift-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.shift-btn { background-color: var(--panel-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
+.shift-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+/* Section 2: Split Middle (Dynamically stretches to fit screen) */
+.middle-split-section { display: flex; gap: 20px; flex: 1; min-height: 0; } /* flex: 1 makes it fill empty space */
+.graph-panel { flex: 7; display: flex; flex-direction: column; min-height: 0; }
+.history-panel { flex: 3; display: flex; flex-direction: column; min-height: 0; }
+
+/* Monkeytype Graph */
+.chart-container { 
+    background-color: var(--panel-bg); border: 1px solid var(--border-color); border-bottom: none; 
+    border-radius: 12px 12px 0 0; padding: 15px; 
+    flex: 1; min-height: 0; /* Lets Chart.js compute height dynamically */
+    display: flex; align-items: center; justify-content: center; position: relative;
+}
+.chart-footer { background-color: var(--pad-bg); border: 1px solid var(--border-color); border-radius: 0 0 12px 12px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.trend-text { font-family: monospace; font-size: 0.85rem; color: var(--text-muted); }
+.chart-toggles { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;}
+.chart-pill { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.chart-pill:hover { background-color: rgba(255,255,255,0.05); }
+.chart-pill.active { border-color: var(--primary-color); color: var(--primary-color); background-color: rgba(37, 99, 235, 0.05); }
+
+/* History Table (Scrolls internally) */
+.history-table-wrapper { 
+    background-color: var(--panel-bg); border: 1px solid var(--border-color); 
+    border-radius: 12px; 
+    flex: 1; min-height: 0; /* Limits height exactly to the graph's height */
+    overflow-y: auto;       /* Adds internal scrollbar */
+}
+.minimal-table { width: 100%; border-collapse: collapse; }
+.minimal-table td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); }
+.test-name { font-weight: 600; margin-bottom: 4px; font-size: 0.85rem; }
+.test-date { font-size: 0.75rem; color: var(--text-muted); }
+.test-score { text-align: right; font-weight: 700; font-size: 1rem; }
+.sub-score-text { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
+
+/* Section 3: 6 Horizontal Performance Boxes */
+.overview-section { flex-shrink: 0; }
+.overview-grid-horizontal { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+.min-stat-card { background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
+.min-stat-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+.min-stat-value { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+.min-stat-value small { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+.sub-stats { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: auto; }
+
+/* Modal Styles */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.2s; }
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal-content { background-color: var(--panel-bg); width: 100%; max-width: 500px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); transform: translateY(20px); transition: 0.2s; }
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid var(--border-color); }
+.close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+.modal-body { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+.config-group label { display: block; font-weight: 600; margin-bottom: 10px; color: var(--text-muted); }
+.modern-file-input { width: 100%; padding: 10px; border: 1px dashed var(--border-color); border-radius: 8px; background-color: var(--pad-bg); color: var(--text-main); }
+.mode-toggle { display: flex; gap: 15px; }
+.mode-btn { flex: 1; padding: 15px; border: 2px solid var(--border-color); background-color: transparent; border-radius: 8px; cursor: pointer; text-align: left; transition: 0.2s; }
+.mode-btn span { display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; font-weight: normal; }
+.mode-btn.active { border-color: var(--primary-color); background-color: rgba(37, 99, 235, 0.05); }
+.modal-footer { padding: 20px 25px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 15px; background-color: var(--pad-bg); border-radius: 0 0 16px 16px; }
+
+/* Scrollbar Customization */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
