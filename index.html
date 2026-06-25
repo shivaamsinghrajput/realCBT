@@ -3,9 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>realCBT - Command Center</title>
+    <link rel="stylesheet" href="css/cbt.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <h1>Go to exam.html</h1>
+<body data-theme="dark" class="dashboard-body">
+
+    <header class="dash-header">
+        <div class="dash-logo">realCBT</div>
+        <div class="dash-controls">
+            <span class="target-badge">🎯 Target: JEE 2026</span>
+            <button id="theme-toggle" class="btn theme-btn">☀️ Light Mode</button>
+        </div>
+    </header>
+
+    <main class="dash-layout">
+        
+        <!-- SECTION 1: Top Launchpad (5 Horizontal Boxes) -->
+        <section class="launchpad-section">
+            <h2 class="dash-title">Give an Exam</h2>
+            <div class="launchpad-grid">
+                
+                <div class="action-card" onclick="toggleMainsArchive()" id="card-mains">
+                    <span class="ac-icon">📚</span>
+                    <span class="ac-text">JEE Mains</span>
+                </div>
+                
+                <div class="action-card disabled">
+                    <span class="ac-icon">🎓</span>
+                    <span class="ac-text">JEE Adv. <span class="action-badge">Soon</span></span>
+                </div>
+                
+                <div class="action-card disabled">
+                    <span class="ac-icon">📖</span>
+                    <span class="ac-text">Ref. Books <span class="action-badge">Soon</span></span>
+                </div>
+                
+                <div class="action-card" onclick="openConfig('Local Upload', 'local_upload')">
+                    <span class="ac-icon">📄</span>
+                    <span class="ac-text">Upload Paper</span>
+                </div>
+                
+                <div class="action-card disabled">
+                    <span class="ac-icon">⚙️</span>
+                    <span class="ac-text">Custom Test <span class="action-badge">Soon</span></span>
+                </div>
+
+            </div>
+
+            <!-- Hidden Archive Container for JEE Mains -->
+            <div id="mains-archive-container" class="accordion-container hidden-archive">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: Middle Split (Graph + History) -->
+        <section class="middle-split-section">
+            
+            <!-- Left: The Monkeytype Graph -->
+            <div class="graph-panel">
+                <h2 class="dash-title">Performance Trajectory</h2>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="chart-footer">
+                    <div class="trend-text" id="score-trend-text">Score change per exam attempted: +0.00 marks</div>
+                    <div class="chart-toggles">
+                        <button class="chart-pill active" onclick="toggleDataset(0, this)">Total Score</button>
+                        <button class="chart-pill active" onclick="toggleDataset(4, this)" style="border-color: #10b981; color: #10b981;">Accuracy</button>
+                        <button class="chart-pill" onclick="toggleDataset(1, this)">Physics</button>
+                        <button class="chart-pill" onclick="toggleDataset(2, this)">Chemistry</button>
+                        <button class="chart-pill" onclick="toggleDataset(3, this)">Maths</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Exam History -->
+            <div class="history-panel">
+                <h2 class="dash-title">Exam Result History</h2>
+                <div class="history-table-wrapper">
+                    <table class="minimal-table">
+                        <tbody id="dash-recent-table">
+                            <!-- JS Injected -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 3: Bottom Performance Overview (6 Horizontal Boxes) -->
+        <section class="overview-section">
+            <h2 class="dash-title">Performance Overview</h2>
+            <div class="overview-grid-horizontal">
+                
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Avg. Score</span>
+                    <span class="min-stat-value" id="stat-avg-score">--<small>/300</small></span>
+                    <div class="sub-stats" id="sub-avg-score">P: -- | C: -- | M: --</div>
+                </div>
+
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Avg. Accuracy</span>
+                    <span class="min-stat-value" id="stat-avg-acc">--%</span>
+                    <div class="sub-stats" id="sub-avg-acc">P: --% | C: --% | M: --%</div>
+                </div>
+
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Avg. Attempted</span>
+                    <span class="min-stat-value" id="stat-avg-att">--<small>/75</small></span>
+                    <div class="sub-stats" id="sub-avg-att">P: -- | C: -- | M: --</div>
+                </div>
+
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Time / Question</span>
+                    <span class="min-stat-value" id="stat-avg-time">--<small>s</small></span>
+                    <div class="sub-stats" id="sub-avg-time">P: --s | C: --s | M: --s</div>
+                </div>
+
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Exams Given</span>
+                    <span class="min-stat-value" id="stat-total-exams">0</span>
+                    <div class="sub-stats">Lifetime total</div>
+                </div>
+
+                <div class="min-stat-card">
+                    <span class="min-stat-label">Strongest Subject</span>
+                    <span class="min-stat-value" id="stat-strong-sub" style="color: var(--nta-answered);">--</span>
+                    <div class="sub-stats" id="stat-strong-score">Avg: -- / 100</div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Pre-Flight Configuration Modal -->
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" style="font-size: 1.2rem; font-weight: 700;">Configure Test</h3>
+                <button class="close-btn" onclick="closeConfig()">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="config-group" id="upload-group" style="display: none;">
+                    <label>Upload Local PDF</label>
+                    <input type="file" id="local-pdf-upload" accept="application/pdf" class="modern-file-input">
+                </div>
+
+                <div class="config-group">
+                    <label>Environment Mode</label>
+                    <div class="mode-toggle">
+                        <button class="mode-btn active" id="mode-exam" onclick="setMode('exam')">
+                            🏆 Exam Mode
+                            <span>Strict timer, UI locked</span>
+                        </button>
+                        <button class="mode-btn" id="mode-practice" onclick="setMode('practice')">
+                            📝 Practice Mode
+                            <span>Untimed, flexible flow</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-group" id="timer-config">
+                    <label>Test Duration</label>
+                    <input type="number" id="test-timer" class="modern-input" value="180" style="width: 150px;"> 
+                    <span style="color: var(--text-muted);">minutes</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeConfig()">Cancel</button>
+                <button class="btn btn-primary" onclick="launchTest()" style="background-color: var(--primary-color);">Start Engine 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
