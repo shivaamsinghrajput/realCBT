@@ -1,50 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Syncopate:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Syncopate:wght@400;700&display=swap');
+
 /* =========================================
    1. VARIABLES & THEMES
 ========================================= */
-
-/* --- Light Mode Variables (Default) --- */
 :root {
-    --primary-color: #2563eb; 
-    --bg-color: #f3f4f6;      
+    --primary-color: #2563eb;
+    --bg-color: #f3f4f6;
     --panel-bg: #ffffff;
     --text-main: #374151;
     --text-muted: #6b7280;
-    --border-color: #e5e7eb;  
+    --border-color: #e5e7eb;
     --pad-bg: #f8fafc;
     --canvas-bg: #ffffff;
 
     /* Exact NTA CBT Colors */
     --nta-unvisited: #e2e8f0;
-    --nta-unanswered: #e1523d; 
-    --nta-answered: #34a853;   
-    --nta-review: #613dba;     
+    --nta-unanswered: #e1523d;
+    --nta-answered: #34a853;
+    --nta-review: #613dba;
 }
 
-/* --- Dark Mode Variables (Modern OLED Style) --- */
 [data-theme="dark"] {
-    --primary-color: #2563eb; 
-    --bg-color: #121212;      
-    --panel-bg: #1e1e1e;      
-    --text-main: #e4e4e7;     
-    --text-muted: #a1a1aa;    
-    --border-color: #27272a;  
-    --pad-bg: #18181b;        
-    --canvas-bg: #cbd5e1; 
-}
-
-/* Dim the glaring white PDF images in dark mode to protect eyes */
-[data-theme="dark"] .visible-slice {
-    filter: brightness(0.85) contrast(1.05);
+    --primary-color: #2563eb;
+    --bg-color: #050505;
+    --panel-bg: #0d0d0d;
+    --text-main: #e4e4e7;
+    --text-muted: #a1a1aa;
+    --border-color: #222222;
+    --pad-bg: #18181b;
+    --canvas-bg: #cbd5e1;
 }
 
 /* =========================================
-   2. GLOBAL RESET
+   2. GLOBAL RESET & BASE LAYOUT
 ========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: var(--text-main);
 }
 
@@ -57,76 +52,205 @@ body {
     transition: background-color 0.3s;
 }
 
+.cbt-layout {
+    flex: 1;
+    display: grid;
+    /* Locks the right panel to 320px, gives the left panel the rest */
+    grid-template-columns: 1fr 320px !important; 
+    overflow: hidden;
+}
+
 /* =========================================
-   3. HEADER
+   3. HEADER & BRANDING (MODERN GLOW)
 ========================================= */
-.cbt-header {
-    background-color: var(--primary-color);
-    padding: 15px 24px;
+/* =========================================
+   3. HEADER & BRANDING (BASELINE FIX)
+========================================= */
+.brand-logo {
+    font-size: 1.3rem;
+    font-family: "Syncopate", sans-serif;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    color: var(--text-color); 
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    flex-shrink: 0; /* Prevents header from being squished */
+    
+    /* THE FIX: Aligns "real" and "CBT" perfectly by their bottom text lines */
+    align-items: baseline; 
+    
+    line-height: 1;
+    user-select: none;
 }
 
-.cbt-header * { 
-    color: white; 
+
+/* =========================================
+   ANIMATED "DEEP TECH" LOGO TEXT
+========================================= */
+
+/* =========================================
+   PREMIUM "NEBULA FLARE" LOGO TEXT
+========================================= */
+
+.brand-logo span {
+    font-weight: 1000;
+    font-family: "Syncopate", sans-serif;
+    font-size: 2.5rem;
+    /* 
+       The Perfect Analogous Flow:
+       Cyber Purple -> Magenta -> Crimson -> Amber Gold -> (and back seamlessly)
+    */
+    background: linear-gradient(135deg, 
+        #8b5cf6, 
+        #d946ef, 
+        #ef4444, 
+        #f59e0b, 
+        #ef4444, 
+        #d946ef, 
+        #8b5cf6
+    );
+    
+    /* Massively stretched so you only see a localized blend at one time */
+    background-size: 400% 400%;
+    
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-left: 2px;
+    
+    /* A long 15-second loop for a luxurious, slow-moving liquid effect */
+    animation: premium-flow 10s ease-in-out infinite;
 }
 
-.header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    font-size: 1.15rem;
+/* Ensure the panning physics remain intact */
+@keyframes premium-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+
+.creator-credit {
+    font-size: 0.65rem;
+    /* text-transform: uppercase; */
+    letter-spacing: 2px;
+    color: #888;
+    margin-top: 4px;
+    margin-left: 2px;
     font-weight: 600;
 }
 
-.header-controls {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+/* The Main Dot - Static and Clean */
+/* The Main Dot - Static and Clean */
+/*  */
+
+/* (Leave your .brand-dot::after and @keyframes smooth-pulse exactly as they are!) */
+
+/* The Smooth Ripple Effect */
+.brand-dot::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background: #6366f1;
+    border-radius: 50%;
+    z-index: -1; /* Puts the ripple behind the main dot */
+    animation: smooth-pulse 2.5s infinite ease-out;
 }
 
-.timer-container {
-    margin-left: auto; /* Pushes the timer to the far right */
-}
-
-.theme-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.theme-btn:hover { 
-    background: rgba(255, 255, 255, 0.2); 
-    border-color: white;
+/* Hardware-Accelerated Keyframes */
+@keyframes smooth-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(3.5); /* Smoothly expands to 3.5x its size */
+        opacity: 0; /* Fades to invisible */
+    }
 }
 
 /* =========================================
-   4. MAIN LAYOUT & LEFT PANEL
+   CLASSIC & BOLD TARGET BADGE
 ========================================= */
-.cbt-layout { 
-    display: flex; 
-    flex: 1; 
-    overflow: hidden; 
+
+.header-target {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: baseline; /* Aligns the different font sizes cleanly at the bottom */
+    gap: 12px;
+    
+    /* Classic, rigid styling */
+    background: var(--panel-bg); 
+    border: 2px solid var(--border-color);
+    /* border-bottom: 4px solid var(--primary-color); Adds a strong, classic accent line */
+    padding: 10px 28px;
+    
+    /* THE FIX: Sharp, structured corners instead of a round pill */
+    border-radius: 5px; 
+    
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+    white-space: nowrap;
 }
 
+/* Ensures it looks properly contrasted in Dark Mode */
+body[data-theme="dark"] .header-target {
+    background: var(--panel-bg); 
+}
+
+.header-target .target-label {
+    font-size: 0.9rem; /* Significantly larger */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    font-weight: 800; /* Much bolder */
+}
+
+.header-target .target-value {
+    font-size: 1.5rem; 
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    
+    /* The Gradient Magic */
+    background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%); /* Cyan to Indigo */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    /* Ensures the gradient doesn't get cut off on the edges of bold text */
+    display: inline-block; 
+}
+
+.theme-btn-styled {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.theme-btn-styled:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* =========================================
+   4. LEFT PANEL & MODERN INPUTS
+========================================= */
 .left-panel {
-    flex: 7;
     background-color: var(--panel-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    overflow-y: auto; /* Scrollbar for the whole left side */
+    overflow-y: auto;
 }
 
 .pdf-viewer-container {
@@ -136,28 +260,29 @@ body {
     align-items: center;
 }
 
-/* =========================================
-   5. UNIVERSAL ANSWER PAD
-========================================= */
+#question-canvas canvas {
+    width: 100% !important;
+    max-width: 1200px !important;
+    height: auto !important;
+}
+
 .universal-answer-pad {
-    background-color: transparent; 
-    padding: 5px 40px 40px 40px; /* Tight top padding hugs the image */
+    padding: 5px 40px 40px 40px;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     gap: 12px;
 }
 
-.pad-header { 
+.pad-header {
     width: 100%;
     max-width: 700px;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 8px; 
+    padding-bottom: 8px;
 }
 
 .horizontal-options {
     display: flex;
-    flex-direction: row;
     justify-content: flex-start;
     width: 100%;
     max-width: 700px;
@@ -165,215 +290,245 @@ body {
     padding-bottom: 5px;
 }
 
-.option-row {
-    display: flex;
+/* .universal-options input[type="radio"] {
+    display: none; 
+} */
+/* =========================================
+   CLASSIC & ENLARGED MCQ OPTIONS
+========================================= */
+
+/* 1. Hide the default HTML radio circles */
+#universal-options input[type="radio"] {
+    display: none !important; 
+}
+
+/* 2. Style the outer label as a physical keyboard key */
+#universal-options .option-row {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 85px; 
+    padding: 12px 35px; 
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 4px; 
     cursor: pointer;
-    padding: 8px 16px;
-    background-color: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    box-shadow: 0 3px 0 var(--border-color); 
+    margin: 0;
 }
 
-.option-row:hover {
-    border-color: var(--primary-color);
+/* 3. Force the font size increase on the text span */
+#universal-options .option-text {
+    font-weight: 700;
+    font-size: 1.35rem !important; /* Massive size */
+    color: var(--text-main);
+    transition: color 0.15s ease;
 }
 
-.option-row input[type="radio"] { 
-    margin-right: 10px; 
-    transform: scale(1.3); 
-    accent-color: var(--primary-color);
+/* 4. Hover state */
+#universal-options .option-row:hover {
+    background: var(--bg-color);
+    border-color: #9ca3af;
 }
 
-.modern-input {
+/* 5. Physical click physics (button pushes down) */
+#universal-options .option-row:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 transparent;
+}
+
+/* 6. Active/Selected State (changes border, background, and text color) */
+#universal-options .option-row:has(input[type="radio"]:checked) {
+    border-color: var(--primary-color) !important; 
+    background: rgba(37, 99, 235, 0.08) !important;
+    box-shadow: 0 3px 0 var(--primary-color) !important; 
+}
+
+#universal-options .option-row:has(input[type="radio"]:checked) .option-text {
+    color: var(--primary-color) !important;
+}
+
+
+
+#numerical-input {
+    width: 100%;
+    max-width: 250px;
+    font-size: 1.5rem;
+    text-align: center;
     padding: 12px;
-    width: 300px;
-    font-size: 1.1rem;
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: monospace;
+    font-weight: bold;
+    transition: all 0.3s ease;
     outline: none;
-    background-color: var(--panel-bg);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.modern-input:focus { 
-    border-color: var(--primary-color); 
+#numerical-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+/* Forces the unvisited buttons in the grid to have readable black text */
+#question-palette .grid-btn.unvisited {
+    color: #000000 !important;
 }
 
 /* =========================================
-   6. RIGHT PANEL & PALETTE
+   5. RIGHT PANEL (PROFILE, LEGEND, GRID)
 ========================================= */
 .right-panel {
-    flex: 3;
     background-color: var(--panel-bg);
     display: flex;
     flex-direction: column;
 }
 
 .candidate-profile {
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 12px;
+    margin: 15px 15px 20px 15px; /* Boxed in nicely */
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
 }
-.candidate-profile p { margin-bottom: 2px; }
+
+.candidate-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    background-color: transparent !important; 
+    border: 2px solid var(--border-color);
+    padding: 2px;
+}
+
+.candidate-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
 
 .palette-legend {
-    padding: 15px 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    font-size: 0.85rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--pad-bg);
-}
-
-.legend-item { 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    font-weight: 500; 
-    width: 45%; 
-}
-
-.palette-header { 
-    padding: 15px 20px; 
-    font-weight: bold; 
-    background-color: var(--panel-bg); 
-}
-
-.question-grid {
-    padding: 0 20px 20px 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
-    gap: 10px;
-    overflow-y: auto;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 15px 5px; 
+    padding: 0 15px 15px 15px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-/* =========================================
-   7. EXACT NTA SHAPES & BADGES
-========================================= */
-.grid-btn, .badge {
-    display: flex; 
-    justify-content: center; 
+.legend-item {
+    display: flex;
     align-items: center;
-    width: 45px; 
-    height: 40px; 
-    color: white !important; 
-    font-weight: bold; 
-    font-size: 1rem;
-    border: none; 
-    cursor: pointer; 
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.legend-item.span-2 {
+    grid-column: span 2;
+}
+
+.palette-legend .badge {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important; 
+    flex-shrink: 0 !important; 
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: white; 
+    margin: 0 !important;
     position: relative;
+    border-radius: 4px;
 }
 
-/* Smaller badges for the legend */
-.badge { 
-    width: 30px; 
-    height: 26px; 
-    font-size: 0; 
-    cursor: default; 
-} 
-
-/* 1. Unvisited: Standard Square with rounding */
-.unvisited { 
-    background-color: var(--nta-unvisited); 
-    color: #333 !important; 
-    border-radius: 4px; 
+.palette-legend .badge.unvisited,
+.palette-legend .badge.unvisited .count-text {
+    color: #000000 !important;
+    background-color: var(--nta-unvisited);
 }
+.count-text { position: relative; z-index: 2; }
 
-/* 2. Unanswered: Red Polygon (top edge slopes down) */
-.unanswered { 
-    background-color: var(--nta-unanswered); 
-    clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 100%); 
-    border-radius: 4px; 
-}
-
-/* 3. Answered: Green Polygon (top edge slopes up) */
-.answered { 
-    background-color: var(--nta-answered); 
-    clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%); 
-    border-radius: 4px; 
-}
-
-/* 4. Marked for Review: Purple Circle */
-.review { 
-    background-color: var(--nta-review); 
-    border-radius: 50%; 
-}
-
-/* 5. Answered & Marked: Purple Circle with green checkmark */
-.review-answered { 
-    background-color: var(--nta-review); 
-    border-radius: 50%; 
-}
+/* NTA Shapes */
+.unanswered { background-color: var(--nta-unanswered); clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 100%); }
+.answered { background-color: var(--nta-answered); clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%); }
+.review, .review-answered { background-color: var(--nta-review); border-radius: 50% !important; }
 .review-answered::after {
     content: "✔";
     position: absolute;
-    bottom: 0; 
-    right: 0;
+    bottom: -2px;
+    right: -2px;
     background-color: var(--nta-answered);
-    width: 14px; 
+    width: 14px;
     height: 14px;
     border-radius: 50%;
-    font-size: 9px; 
-    line-height: 14px; 
-    text-align: center; 
+    font-size: 9px;
+    line-height: 14px;
+    text-align: center;
     color: white;
     border: 1px solid white;
+    z-index: 3;
 }
 
-/* =========================================
-   8. FOOTER
-========================================= */
-.cbt-footer {
-    height: 60px;
-    background-color: var(--panel-bg);
-    border-top: 1px solid var(--border-color);
-    display: flex; 
-    justify-content: space-between; 
+/* Scrollable Question Grid */
+#question-palette {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+    padding: 15px;
+    max-height: calc(100vh - 420px); 
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: start;
+}
+
+#question-palette::-webkit-scrollbar { width: 5px; }
+#question-palette::-webkit-scrollbar-track { background: transparent; }
+#question-palette::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 10px; }
+#question-palette::-webkit-scrollbar-thumb:hover { background-color: #888; }
+
+#question-palette .grid-btn {
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important; 
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
     align-items: center;
-    padding: 0 24px;
-    flex-shrink: 0; /* Locks the footer firmly to the bottom */
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    color: white !important;
 }
 
-.left-actions, .right-actions { 
-    display: flex; 
-    gap: 15px; 
+#question-palette{
+    flex:1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 65px;
 }
 
-.btn { 
-    padding: 10px 20px; 
-    border-radius: 6px; 
-    font-weight: 600; 
-    cursor: pointer; 
-    border: none; 
-}
 
-.btn-secondary { 
-    background-color: var(--pad-bg); 
-    border: 1px solid var(--border-color); 
-}
-.btn-secondary:hover { background-color: var(--border-color); }
-
-.btn-primary { 
-    background-color: var(--nta-answered); 
-    color: white; 
-}
-.btn-primary:hover { filter: brightness(0.9); }
-
-.btn-danger { 
-    background-color: var(--primary-color); 
-    color: white; 
-}
-.btn-danger:hover { filter: brightness(0.9); }
-
-/* --- Subject Tabs --- */
+/* Subject Tabs */
 .subject-tabs-container {
     display: flex;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--panel-bg);
 }
-
 .sub-tab {
     flex: 1;
     padding: 12px 0;
@@ -385,51 +540,246 @@ body {
     border-bottom: 3px solid transparent;
     transition: all 0.2s;
 }
-
 .sub-tab:hover { color: var(--text-main); }
 .sub-tab.active {
     color: var(--primary-color);
     border-bottom: 3px solid var(--primary-color);
     background-color: rgba(37, 99, 235, 0.05);
 }
+.palette-header { padding: 15px 20px 0 20px; font-weight: bold; background-color: var(--panel-bg); }
 
 /* =========================================
-   9. RESULT MODAL OVERLAY
+   6. FOOTER
 ========================================= */
-.modal-overlay {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(5px);
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    z-index: 1000;
-    
-    /* These two lines keep it hidden by default */
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.3s ease;
-}
-
-/* When JavaScript adds the "active" class, it fades in */
-.modal-overlay.active { 
-    opacity: 1; 
-    pointer-events: all; 
-}
-
-.modal-content {
+.cbt-footer {
+    height: 60px;
     background-color: var(--panel-bg);
-    border-radius: 16px; 
-    border: 1px solid var(--border-color);
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
-    transform: translateY(20px); 
-    transition: transform 0.3s ease;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    flex-shrink: 0; 
+}
+.left-actions, .right-actions { display: flex; gap: 15px; }
+.btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+.btn-secondary { background-color: var(--pad-bg); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background-color: var(--border-color); }
+.btn-primary { background-color: var(--nta-answered); color: white; }
+.btn-primary:hover { filter: brightness(0.9); }
+.btn-danger { background-color: var(--primary-color); color: white; }
+.btn-danger:hover { filter: brightness(0.9); }
+
+/* =========================================
+   7. UNIFIED DARK MODE FILTERS
+========================================= */
+body:not([data-theme="dark"]) #question-canvas,
+body:not([data-theme="dark"]) main canvas:not(#resultChart),
+body:not([data-theme="dark"]) main img,
+body:not([data-theme="dark"]) #review-q-canvas canvas {
+    filter: grayscale(1) contrast(1.18) brightness(0.96) !important;
 }
 
-.modal-overlay.active .modal-content { 
-    transform: translateY(0); 
+body[data-theme="dark"] #question-canvas,
+body[data-theme="dark"] main canvas:not(#resultChart),
+body[data-theme="dark"] main img,
+body[data-theme="dark"] #review-q-canvas canvas,
+body[data-theme="dark"] #review-q-canvas img {
+    filter: invert(0.93) hue-rotate(180deg) contrast(1.05) !important;
+    box-shadow: none !important;
+}
+
+#question-canvas, main canvas:not(#resultChart), main img, #review-q-canvas canvas, #review-q-canvas div {
+    background-color: white !important;
+}
+
+/* =========================================
+   8. MODALS & ANALYTICS (Kept Intact)
+========================================= */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s ease; }
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal-content { background-color: var(--panel-bg); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); transform: translateY(20px); transition: 0.3s ease; }
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.result-takeover { max-width: 900px !important; width: 90%; padding: 0 !important; overflow: hidden; background-color: var(--bg-color) !important; }
+.result-header { padding: 30px 30px 0 30px; border-bottom: 1px solid var(--border-color); background-color: var(--panel-bg); }
+.result-header h2 { font-size: 1.5rem; margin-bottom: 20px; color: var(--text-main); }
+.result-tabs { display: flex; gap: 20px; }
+.res-tab { background: none; border: none; padding: 10px 0; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+.res-tab:hover { color: var(--text-main); }
+.res-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+.result-body { padding: 30px; }
+.overview-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px; }
+.stats-column { display: flex; flex-direction: column; gap: 15px; }
+.res-stat-card { background-color: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; }
+.res-stat-card span { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
+.res-stat-card h1 { font-size: 2.5rem; margin: 10px 0 5px 0; }
+.res-stat-card small { font-size: 1rem; color: var(--text-muted); }
+.res-compare { font-size: 0.85rem; font-weight: 600; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+.res-compare.up { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
+.res-compare.down { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.chart-column { background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; }
+.analysis-filters { display: flex; gap: 10px; margin-bottom: 20px; }
+.filter-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+.filter-btn.active { background-color: var(--panel-bg); color: var(--text-main); border-color: var(--text-muted); }
+.filter-btn.incorrect:hover, .filter-btn.active.incorrect { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+.filter-btn.correct:hover, .filter-btn.active.correct { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
+.filter-btn.warning:hover, .filter-btn.active.warning { border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+.analysis-table-wrapper { max-height: 400px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; }
+.analysis-table { width: 100%; border-collapse: collapse; text-align: left; }
+.analysis-table th { background-color: var(--panel-bg); padding: 12px 15px; font-size: 0.85rem; color: var(--text-muted); position: sticky; top: 0; z-index: 10; }
+.analysis-table td { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; font-weight: 500; }
+.analysis-table tr:hover { background-color: rgba(255,255,255,0.02); }
+.badge-status { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+.badge-status.correct { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
+.badge-status.incorrect { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.badge-status.unanswered { background-color: var(--panel-bg); color: var(--text-muted); }
+.time-warning { color: #f59e0b; font-weight: bold; }
+
+.chart-toggles .chart-pill {
+    color:#000;
+    font-weight: bold;
+}
+
+.chart-toggles .chart-pill:focus {
+    color: blue
+}
+
+
+/* =========================================
+   COLOR-SHIFTING PULSE DOT (CLEANED)
+========================================= */
+
+/* 1. The Main Core */
+.brand-dot {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 8px;
+    align-self: center; 
+    z-index: 2;
+    
+    /* Runs TWO animations: physical breath (2.5s) and color shift (15s) */
+    animation: 
+        core-breathe 2.5s infinite ease-in-out,
+        core-color-shift 15s infinite ease-in-out;
+}
+
+/* 2. Setup for Expanding Rings */
+.brand-dot::before,
+.brand-dot::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* 3. Ring 1 (Fires immediately) */
+.brand-dot::before {
+    animation: 
+        sonar-ripple 2.5s infinite cubic-bezier(0.25, 1, 0.5, 1),
+        core-color-shift 15s infinite ease-in-out;
+}
+
+/* 4. Ring 2 (Staggered) */
+.brand-dot::after {
+    animation: 
+        sonar-ripple 2.5s infinite cubic-bezier(0.25, 1, 0.5, 1),
+        core-color-shift 15s infinite ease-in-out;
+    /* Staggers the physical pop by 1.25s, but keeps the 15s color loop perfectly in sync (0s) */
+    animation-delay: 1.25s, 0s; 
+}
+
+/* --- GPU-Accelerated Keyframes --- */
+
+/* 1. The Physical Size & Glow Intensity */
+@keyframes core-breathe {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.15); filter: brightness(1.3); }
+}
+
+/* 2. The Overlapping Ripple Physics */
+@keyframes sonar-ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(4.5); /* Massive sweep outward */
+        opacity: 0;
+    }
+}
+
+/* 3. The Color Matching Loop (Syncs with Text) */
+@keyframes core-color-shift {
+    0%, 100% { background: #8b5cf6; box-shadow: 0 0 12px rgba(139, 92, 246, 0.6); } /* Purple */
+    25% { background: #d946ef; box-shadow: 0 0 12px rgba(217, 70, 239, 0.6); }      /* Magenta */
+    50% { background: #f59e0b; box-shadow: 0 0 12px rgba(245, 158, 11, 0.6); }       /* Amber Gold */
+    75% { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.6); }        /* Crimson */
+}
+
+
+
+
+
+/* =========================================
+   TARGET COUNTDOWN BADGE
+========================================= */
+
+/* The vertical separator line */
+.target-divider {
+  width: 2px;
+  height: 18px;
+  background-color: var(--border-color);
+  margin: 0 4px;
+  border-radius: 2px;
+}
+
+/* The subtle red urgency pill */
+.target-countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.08); /* A very faint, premium crimson tint */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+/* The main number (Easy for JS to target) */
+.target-countdown .days-number {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ef4444; /* High-urgency red */
+  font-family: monospace;
+  letter-spacing: -0.5px;
+}
+
+/* The 'Days' text */
+.target-countdown .days-text {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #ef4444;
+  letter-spacing: 0.5px;
+}
+
+.header-target .target-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.header-target .target-value {
+  font-size: 1.15rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

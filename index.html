@@ -1,185 +1,426 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>realCBT - Command Center</title>
-    <link rel="stylesheet" href="css/cbt.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>realCBT - Dashboard</title>
+    <link rel="stylesheet" href="css/cbt.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body data-theme="dark" class="dashboard-body">
+  </head>
 
+  <body data-theme="dark" class="dashboard-body">
     <header class="dash-header">
-        <div class="dash-logo">realCBT</div>
-        <div class="dash-controls">
-            <span class="target-badge">🎯 Target: JEE 2026</span>
-            <button id="theme-toggle" class="btn theme-btn">☀️ Light Mode</button>
+      <!-- 1. LEFT: Brand & Creator -->
+      <div class="header-brand">
+        <div class="brand-logo">
+          real<span>CBT</span>
+          <div class="brand-dot"></div>
         </div>
+        <div class="creator-credit">Crafted With 🖤 by Shivam</div>
+      </div>
+
+      <!-- 2. CENTER: The Action Button & Target Box -->
+      <div class="header-center">
+        <!-- The Action Button -->
+        <div class="split-btn-group header-action-btn">
+          <button class="btn-main-action" onclick="openUniversalMenu()">
+            Initialize Exam
+          </button>
+          <div class="btn-divider"></div>
+          <button
+            class="btn-sub-action"
+            onclick="openConfig('Custom Upload', 'local_upload')"
+            title="Upload Custom Paper"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- The Target Box with Countdown -->
+        <div class="header-target">
+          <span class="target-label">TARGET:</span>
+          <span id="target-exam" class="target-value">JEE Mains</span>
+          <div class="target-divider"></div>
+          <div class="target-countdown" title="Days until exam">
+            <span id="days-left-count" class="days-number">100</span>
+            <span class="days-text">Days Left</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. RIGHT: Controls (Profile & Theme) -->
+      <!-- 3. RIGHT: Controls (Settings, Profile & Theme) -->
+      <div class="header-controls">
+        <!-- The New Settings Icon Button -->
+        <button class="settings-btn" title="Dashboard Settings">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+            ></path>
+          </svg>
+        </button>
+
+        <div class="profile-group">
+          <div class="candidate-profile">
+            <img
+              id="candidate-avatar"
+              class="candidate-avatar"
+              alt="Candidate"
+            />
+            <span id="candidate-name" class="candidate-name">Loading...</span>
+          </div>
+          <button id="theme-toggle" class="theme-btn-styled">
+            ☀️ Switch to Light Mode
+          </button>
+        </div>
+      </div>
     </header>
 
     <main class="dash-layout">
-        
-        <!-- SECTION 1: Top Launchpad (5 Horizontal Boxes) -->
-        <section class="launchpad-section">
-            <h2 class="dash-title">Give an Exam</h2>
-            <div class="launchpad-grid">
-                
-                <div class="action-card" onclick="toggleMainsArchive()" id="card-mains">
-                    <span class="ac-icon">📚</span>
-                    <span class="ac-text">JEE Mains</span>
-                </div>
-                
-                <div class="action-card disabled">
-                    <span class="ac-icon">🎓</span>
-                    <span class="ac-text">JEE Adv. <span class="action-badge">Soon</span></span>
-                </div>
-                
-                <div class="action-card disabled">
-                    <span class="ac-icon">📖</span>
-                    <span class="ac-text">Ref. Books <span class="action-badge">Soon</span></span>
-                </div>
-                
-                <div class="action-card" onclick="openConfig('Local Upload', 'local_upload')">
-                    <span class="ac-icon">📄</span>
-                    <span class="ac-text">Upload Paper</span>
-                </div>
-                
-                <div class="action-card disabled">
-                    <span class="ac-icon">⚙️</span>
-                    <span class="ac-text">Custom Test <span class="action-badge">Soon</span></span>
-                </div>
-
+      <!-- SECTION 2: Middle Split (Graph + History) -->
+      <section class="middle-split-section">
+        <div class="graph-panel">
+          
+          <div class="graph-header-row">
+            <h2 class="dash-title">Performance Trajectory</h2>
+            <div class="main-metric-tabs">
+              <button class="metric-tab active" onclick="switchMetric('score')">Score</button>
+              <button class="metric-tab" onclick="switchMetric('accuracy')">Accuracy</button>
+              <button class="metric-tab" onclick="switchMetric('attempted')">Attempted</button>
+              <button class="metric-tab" onclick="switchMetric('time')">Time / Q</button>
             </div>
+          </div>
 
-            <!-- Hidden Archive Container for JEE Mains -->
-            <div id="mains-archive-container" class="accordion-container hidden-archive">
-                <!-- Injected via JS -->
+          <div class="graphs-grid">
+            <div class="main-chart-wrapper">
+              <canvas id="mainChart"></canvas>
             </div>
-        </section>
+          </div>
 
-        <!-- SECTION 2: Middle Split (Graph + History) -->
-        <section class="middle-split-section">
-            
-            <!-- Left: The Monkeytype Graph -->
-            <div class="graph-panel">
-                <h2 class="dash-title">Performance Trajectory</h2>
-                <div class="chart-container">
-                    <canvas id="performanceChart"></canvas>
+        </div>
+
+        <aside class="minimal-history-panel">
+          <div class="history-block">
+            <h4 class="history-title">Last 5 Scores</h4>
+            <ul class="score-list" id="last-5-list"></ul>
+          </div>
+
+          <div class="history-block">
+            <h4 class="history-title">Top 5 Scores</h4>
+            <ul class="score-list" id="top-5-list"></ul>
+          </div>
+
+          <button class="btn-see-all" onclick="openHistoryModal()">
+            See All History →
+          </button>
+        </aside>
+
+        <aside class="vertical-heatmap-panel">
+          <h4 class="history-title">Activity Matrix</h4>
+          
+          <div class="heatmap-container">
+            <div class="heatmap-layout">
+              
+              <div class="heatmap-months" id="heatmap-months"></div>
+              
+              <div class="heatmap-main">
+                <div class="heatmap-days-header">
+                  <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
                 </div>
-                <div class="chart-footer">
-                    <div class="trend-text" id="score-trend-text">Score change per exam attempted: +0.00 marks</div>
-                    <div class="chart-toggles">
-                        <button class="chart-pill active" onclick="toggleDataset(0, this)">Total Score</button>
-                        <button class="chart-pill active" onclick="toggleDataset(4, this)" style="border-color: #10b981; color: #10b981;">Accuracy</button>
-                        <button class="chart-pill" onclick="toggleDataset(1, this)">Physics</button>
-                        <button class="chart-pill" onclick="toggleDataset(2, this)">Chemistry</button>
-                        <button class="chart-pill" onclick="toggleDataset(3, this)">Maths</button>
-                    </div>
-                </div>
+                <div class="heatmap-grid" id="vertical-heatmap"></div>
+              </div>
+              
             </div>
+          </div>
 
-            <!-- Right: Exam History -->
-            <div class="history-panel">
-                <h2 class="dash-title">Exam Result History</h2>
-                <div class="history-table-wrapper">
-                    <table class="minimal-table">
-                        <tbody id="dash-recent-table">
-                            <!-- JS Injected -->
-                        </tbody>
-                    </table>
-                </div>
+          <div class="heatmap-legend">
+            <span class="legend-text">Less</span>
+            <div class="legend-box lvl-0"></div>
+            <div class="legend-box lvl-1"></div>
+            <div class="legend-box lvl-2"></div>
+            <div class="legend-box lvl-3"></div>
+            <div class="legend-box lvl-4"></div>
+            <span class="legend-text">More</span>
+          </div>
+        </aside>
+      </section>
+
+      <!-- SECTION 3: Bottom Performance Overview (6 Horizontal Boxes) -->
+      <section class="overview-section">
+        <h2 class="dash-title">Performance Overview</h2>
+        <div class="overview-grid-horizontal">
+          <div class="min-stat-card">
+            <span class="min-stat-label">Avg. Score</span>
+            <span class="min-stat-value" id="stat-avg-score"
+              >--<small>/300</small></span
+            >
+            <div class="sub-stats" id="sub-avg-score">
+              P: -- | C: -- | M: --
             </div>
+          </div>
 
-        </section>
-
-        <!-- SECTION 3: Bottom Performance Overview (6 Horizontal Boxes) -->
-        <section class="overview-section">
-            <h2 class="dash-title">Performance Overview</h2>
-            <div class="overview-grid-horizontal">
-                
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Avg. Score</span>
-                    <span class="min-stat-value" id="stat-avg-score">--<small>/300</small></span>
-                    <div class="sub-stats" id="sub-avg-score">P: -- | C: -- | M: --</div>
-                </div>
-
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Avg. Accuracy</span>
-                    <span class="min-stat-value" id="stat-avg-acc">--%</span>
-                    <div class="sub-stats" id="sub-avg-acc">P: --% | C: --% | M: --%</div>
-                </div>
-
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Avg. Attempted</span>
-                    <span class="min-stat-value" id="stat-avg-att">--<small>/75</small></span>
-                    <div class="sub-stats" id="sub-avg-att">P: -- | C: -- | M: --</div>
-                </div>
-
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Time / Question</span>
-                    <span class="min-stat-value" id="stat-avg-time">--<small>s</small></span>
-                    <div class="sub-stats" id="sub-avg-time">P: --s | C: --s | M: --s</div>
-                </div>
-
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Exams Given</span>
-                    <span class="min-stat-value" id="stat-total-exams">0</span>
-                    <div class="sub-stats">Lifetime total</div>
-                </div>
-
-                <div class="min-stat-card">
-                    <span class="min-stat-label">Strongest Subject</span>
-                    <span class="min-stat-value" id="stat-strong-sub" style="color: var(--nta-answered);">--</span>
-                    <div class="sub-stats" id="stat-strong-score">Avg: -- / 100</div>
-                </div>
-
+          <div class="min-stat-card">
+            <span class="min-stat-label">Avg. Accuracy</span>
+            <span class="min-stat-value" id="stat-avg-acc">--%</span>
+            <div class="sub-stats" id="sub-avg-acc">
+              P: --% | C: --% | M: --%
             </div>
-        </section>
+          </div>
+
+          <div class="min-stat-card">
+            <span class="min-stat-label">Avg. Attempted</span>
+            <span class="min-stat-value" id="stat-avg-att"
+              >--<small>/75</small></span
+            >
+            <div class="sub-stats" id="sub-avg-att">P: -- | C: -- | M: --</div>
+          </div>
+
+          <div class="min-stat-card">
+            <span class="min-stat-label">Time / Question</span>
+            <span class="min-stat-value" id="stat-avg-time"
+              >--<small>s</small></span
+            >
+            <div class="sub-stats" id="sub-avg-time">
+              P: --s | C: --s | M: --s
+            </div>
+          </div>
+
+          <div class="min-stat-card">
+            <span class="min-stat-label">Exams Given</span>
+            <span class="min-stat-value" id="stat-total-exams">0</span>
+            <div class="sub-stats" id="sub-total-exams">Lifetime total</div>
+          </div>
+
+          <div class="min-stat-card">
+            <span class="min-stat-label">Strongest Subject</span>
+            <span
+              class="min-stat-value"
+              id="stat-strong-sub"
+              style="color: var(--nta-answered)"
+              >--</span
+            >
+            <div class="sub-stats" id="stat-strong-score">Avg: -- / 100</div>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <div class="modal-overlay" id="universal-menu-modal">
+      <div class="modal-content large-command-center">
+        <div class="modal-header">
+          <h3 style="font-size: 1.2rem; font-weight: 700">
+            Initialize Target Environment
+          </h3>
+          <button class="close-btn" onclick="closeUniversalMenu()">✕</button>
+        </div>
+
+        <div class="modal-split-body">
+          <aside class="modal-sidebar">
+            <button
+              class="side-tab active"
+              id="tab-jee"
+              onclick="switchTab('jee')"
+            >
+              <span class="tab-icon">🏆</span> JEE Mains
+            </button>
+            <button
+              class="side-tab"
+              id="tab-advanced"
+              onclick="switchTab('advanced')"
+            >
+              <span class="tab-icon">🦾</span> JEE Advanced
+            </button>
+            <button
+              class="side-tab"
+              id="tab-wbjee"
+              onclick="switchTab('wbjee')"
+            >
+              <span class="tab-icon">⚡</span> WBJEE
+            </button>
+            <button
+              class="side-tab"
+              id="tab-others"
+              onclick="switchTab('others')"
+            >
+              <span class="tab-icon">🎯</span> Others
+            </button>
+            <div class="sidebar-divider"></div>
+            <button class="side-tab custom-tab" onclick="selectCustomUpload()">
+              <span class="tab-icon">📂</span> Custom Upload
+            </button>
+          </aside>
+
+          <main class="modal-main-content" id="modal-dynamic-content"></main>
+        </div>
+      </div>
+    </div>
 
     <!-- Pre-Flight Configuration Modal -->
     <div class="modal-overlay" id="config-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title" style="font-size: 1.2rem; font-weight: 700;">Configure Test</h3>
-                <button class="close-btn" onclick="closeConfig()">✕</button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="config-group" id="upload-group" style="display: none;">
-                    <label>Upload Local PDF</label>
-                    <input type="file" id="local-pdf-upload" accept="application/pdf" class="modern-file-input">
-                </div>
-
-                <div class="config-group">
-                    <label>Environment Mode</label>
-                    <div class="mode-toggle">
-                        <button class="mode-btn active" id="mode-exam" onclick="setMode('exam')">
-                            🏆 Exam Mode
-                            <span>Strict timer, UI locked</span>
-                        </button>
-                        <button class="mode-btn" id="mode-practice" onclick="setMode('practice')">
-                            📝 Practice Mode
-                            <span>Untimed, flexible flow</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="config-group" id="timer-config">
-                    <label>Test Duration</label>
-                    <input type="number" id="test-timer" class="modern-input" value="180" style="width: 150px;"> 
-                    <span style="color: var(--text-muted);">minutes</span>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeConfig()">Cancel</button>
-                <button class="btn btn-primary" onclick="launchTest()" style="background-color: var(--primary-color);">Start Engine 🚀</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title" style="font-size: 1.2rem; font-weight: 700">
+            Configure Test
+          </h3>
+          <button class="close-btn" onclick="closeConfig()">✕</button>
         </div>
+
+        <div class="modal-body">
+          <div class="config-group" id="upload-group" style="display: none">
+            <label>Upload Local PDF</label>
+            <input
+              type="file"
+              id="local-pdf-upload"
+              accept="application/pdf"
+              class="modern-file-input"
+            />
+          </div>
+
+          <div class="config-group">
+            <label>Environment Mode</label>
+            <div class="mode-toggle">
+              <button
+                class="mode-btn active"
+                id="mode-exam"
+                onclick="setMode('exam')"
+              >
+                🏆 Exam Mode
+                <span>Strict timer, UI locked</span>
+              </button>
+              <button
+                class="mode-btn"
+                id="mode-practice"
+                onclick="setMode('practice')"
+              >
+                📝 Practice Mode
+                <span>Untimed, flexible flow</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="config-group" id="timer-config">
+            <label>Test Duration</label>
+            <input
+              type="number"
+              id="test-timer"
+              class="modern-input"
+              value="180"
+              style="width: 150px"
+            />
+            <span style="color: var(--text-muted)">minutes</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeConfig()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="launchTest()"
+            style="background-color: var(--primary-color)"
+          >
+            Start Engine 🚀
+          </button>
+        </div>
+      </div>
     </div>
 
+    <!-- Full Exam History Modal -->
+    <div class="modal-overlay" id="history-modal">
+      <div class="modal-content" style="max-width: 750px">
+        <div class="modal-header">
+          <h3 style="font-size: 1.2rem; font-weight: 700">
+            Lifetime Exam History
+          </h3>
+          <button class="close-btn" onclick="closeHistoryModal()">✕</button>
+        </div>
+
+        <div
+          class="modal-body"
+          style="max-height: 60vh; overflow-y: auto; padding: 0"
+        >
+          <table
+            style="width: 100%; border-collapse: collapse; text-align: left"
+          >
+            <thead
+              style="background: var(--panel-bg); position: sticky; top: 0"
+            >
+              <tr>
+                <th
+                  style="
+                    padding: 12px 20px;
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    border-bottom: 1px solid var(--border-color);
+                  "
+                >
+                  Date
+                </th>
+                <th
+                  style="
+                    padding: 12px 20px;
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    border-bottom: 1px solid var(--border-color);
+                  "
+                >
+                  Exam Name
+                </th>
+                <th
+                  style="
+                    padding: 12px 20px;
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    border-bottom: 1px solid var(--border-color);
+                  "
+                >
+                  Score
+                </th>
+                <th
+                  style="
+                    padding: 12px 20px;
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    border-bottom: 1px solid var(--border-color);
+                  "
+                >
+                  Accuracy
+                </th>
+              </tr>
+            </thead>
+            <tbody id="full-history-tbody">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="js/header.js"></script>
     <script src="js/dashboard.js"></script>
-</body>
+  </body>
 </html>

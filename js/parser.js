@@ -73,7 +73,7 @@ async function autoGenerateExamMap(pdf) {
         lastSlice.endY = lastViewport.height - 80;
     }
 
-    console.log("Successfully Mapped with Stitching:", examMap);
+    console.log("Successfully Mapped with Stitching");
     return examMap;
 }
 
@@ -192,12 +192,36 @@ function trimCanvasBottom(canvas) {
         ctx.drawImage(tempCanvas, 0, 0);
     }
 }
-// --- 4. The Upload Listener ---
-// --- 4. The Upload Listener ---
-// --- 4. The Auto-Loader & Timer Initialization ---
-// let examTimerInterval;
 
-// --- 4. The Auto-Loader (Timer Removed & Shifted to exam.js) ---
+
+// Function to run on exam.html to get the massive file back out!
+function fetchPdfFromDatabase() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("MockOS_Storage", 1);
+        
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const transaction = db.transaction("pdfs", "readonly");
+            const store = transaction.objectStore("pdfs");
+            
+            const getRequest = store.get("custom_test_paper");
+            
+            getRequest.onsuccess = () => {
+                const rawFile = getRequest.result;
+                if (rawFile) {
+                    // Turn the raw file back into a temporary local URL for the PDF viewer!
+                    const fastUrl = URL.createObjectURL(rawFile);
+                    resolve(fastUrl); 
+                } else {
+                    reject("File not found in database.");
+                }
+            };
+        };
+        request.onerror = (err) => reject(err);
+    });
+}
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     
     const configData = localStorage.getItem('mockos_current_exam');
@@ -207,37 +231,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const config = JSON.parse(configData);
-    
+
+    // Block web links instantly to prevent crashes, forcing the use of the local library
     if (config.url.startsWith('http')) {
-        alert("This paper is not downloaded yet! \n\n1. Run the Python downloader script.\n2. Ensure data.json points to 'papers/pdfs/your_file.pdf'.");
+        alert("This paper is not in your local library!\n\nPlease run the Python sync script to download it to your 'papers/pdfs' folder for instant, offline access.");
         window.location.href = "index.html";
         return;
-    } 
+    }
+
+    if (config.url === "DATABASE_FETCH_REQUIRED") {
+        try {
+            // Added 'await' so it actually waits for the file to be pulled from the database!
+            config.url = await fetchPdfFromDatabase(); 
+        } catch (error) {
+            alert("Could not retrieve your custom paper from the secure database.");
+            console.error(error);
+            window.location.href = "index.html";
+            return;
+        }
+    }
 
     try {
-        document.querySelector('.exam-title').innerText = "Scanning Local Paper & Extracting Keys...";
+        document.querySelector('.exam-title').innerText = "Loading Secure Local Paper...";
         
+        // Load the PDF directly from your hard drive (0ms latency)
         const loadingTask = pdfjsLib.getDocument(config.url);
         currentPDF = await loadingTask.promise;
         
-        // 1. Generate the Visual Map
         const autoMap = await autoGenerateExamMap(currentPDF);
-        
-        // 2. Extract the Official Answer Key from the last page
         const answerKey = await extractAnswerKey(currentPDF);
         
-        document.querySelector('.exam-title').innerText = config.name;
+        document.querySelector('.exam-title').innerText = config.name || "realCBT Mock Exam";
 
-        // 3. Pass EVERYTHING to the Exam Engine
         if (typeof startExam === "function") {
             startExam(autoMap, answerKey, config); 
         }
     } catch (error) {
         console.error(error);
-        alert(`Error loading PDF from path: ${config.url}. Make sure the file exists!`);
+        alert(`Failed to load the PDF from ${config.url}. Make sure the file exists in your papers/pdfs folder!`);
         window.location.href = "index.html";
     }
 });
+
+// --- 5. MathonGo Answer Key Extractor (Keep your existing extractor code below this) ---
 
 // --- 5. MathonGo Answer Key Extractor ---
 async function extractAnswerKey(pdf) {
@@ -254,7 +290,7 @@ async function extractAnswerKey(pdf) {
         keyMap[parseInt(match[1])] = match[2].trim();
     }
     
-    console.log("Successfully Extracted Answer Key:", keyMap);
+    console.log("Successfully Extracted Answer Key");
     return keyMap;
 }
 
